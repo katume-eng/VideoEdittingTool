@@ -72,7 +72,7 @@ def format_timecode(seconds: Union[int, float]) -> str:
         raise ValueError("Seconds must be non-negative.")
     hours = int(total_seconds // 3600)
     minutes = int((total_seconds % 3600) // 60)
-    secs = total_seconds - hours * 3600 - minutes * 60
+    secs = float(total_seconds - hours * 3600 - minutes * 60)
     if secs.is_integer():
         seconds_str = f"{int(secs):02d}"
     else:

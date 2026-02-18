@@ -33,7 +33,7 @@ def cut_by_duration(
         input_ext = input_file.suffix
         start_formatted = sanitize_timecode_label(format_timecode(start_seconds))
         duration_formatted = sanitize_timecode_label(format_timecode(duration_seconds))
-        output_filename = f"{input_stem}_cut_{start_formatted}_dur_{duration_formatted}{input_ext}"
+        output_filename = f"{input_stem}_clip_{start_formatted}_dur_{duration_formatted}{input_ext}"
         output_file = output_dir / output_filename
 
     args = [

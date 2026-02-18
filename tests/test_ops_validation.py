@@ -55,7 +55,7 @@ def test_parse_frame_rate_invalid_values() -> None:
     assert _parse_frame_rate("bad") == 0.0
 
 
-def test_cut_fixed_handles_copy_and_float_duration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cut_fixed_handles_float_duration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     input_file = tmp_path / "input.mp4"
     input_file.write_text("data")
     calls: list[list[str]] = []
@@ -70,19 +70,29 @@ def test_cut_fixed_handles_copy_and_float_duration(tmp_path: Path, monkeypatch: 
         timestamps=["0:00"],
         duration=30.5,
         output_dir=tmp_path,
-        copy_streams=True,
+        copy_streams=False,
     )
     assert outputs
     assert "30.5" in calls[0]
-    assert "-c" in calls[0]
-    assert "copy" in calls[0]
+    assert "-c" not in calls[0]
 
-    calls.clear()
+
+def test_cut_fixed_handles_copy_streams(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    input_file = tmp_path / "input.mp4"
+    input_file.write_text("data")
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str]) -> None:
+        calls.append(args)
+
+    monkeypatch.setattr(cut_fixed, "run_ffmpeg", fake_run)
+
     cut_fixed.cut_fixed_clips(
         input_file=input_file,
         timestamps=["0:10"],
         duration=20,
         output_dir=tmp_path,
-        copy_streams=False,
+        copy_streams=True,
     )
-    assert "-c" not in calls[0]
+    assert "-c" in calls[0]
+    assert "copy" in calls[0]
