@@ -45,13 +45,13 @@ def parse_timecode(timecode: Union[str, int, float]) -> float:
     )
 
 
-def _parse_int(value: str, label: str) -> int:
+def _parse_int(value: str, field_name: str) -> int:
     try:
         parsed = int(value)
     except ValueError as exc:
-        raise ValueError(f"Invalid {label} value: {value}") from exc
+        raise ValueError(f"Invalid {field_name} value: {value}") from exc
     if parsed < 0:
-        raise ValueError(f"{label.capitalize()} must be non-negative.")
+        raise ValueError(f"{field_name.capitalize()} must be non-negative.")
     return parsed
 
 

@@ -59,8 +59,12 @@ def concat_videos(
 
 def _escape_concat_path(path: Path) -> str:
     path_str = str(path)
-    path_str = path_str.replace("\\", "\\\\")
-    path_str = path_str.replace("'", "\\'")
-    path_str = path_str.replace("\n", "\\n")
-    path_str = path_str.replace("\r", "")
+    replacements = {
+        "\\": "\\\\",
+        "'": "\\'",
+        "\n": "\\n",
+        "\r": "",
+    }
+    for old, new in replacements.items():
+        path_str = path_str.replace(old, new)
     return path_str
