@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Packaging
+build/
+dist/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editors
+.vscode/
+.idea/
+
+# Data outputs (keep directories)
+data/video/raw/*
+!data/video/raw/.gitkeep
+data/video/processed/*
+!data/video/processed/.gitkeep
+data/video/temp/*
+!data/video/temp/.gitkeep
