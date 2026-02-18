@@ -6,8 +6,8 @@ import sys
 
 def main():
     # 設定
-    input_file = "mnt/c/bussiness/song/Tori_1/input.mp4"
-    output_dir = "mnt/c/bussiness/song/Tori_1/clips"
+    input_file = "/mnt/c/bussiness/song/Tori_1/月に沈む都/input.mp4"
+    output_dir = "/mnt/c/bussiness/song/Tori_1/月に沈む都/clips"
     duration = 60  # 秒
     
     # 切り抜きたい開始時間のリスト
@@ -27,7 +27,7 @@ def main():
     
     cmd.extend(["--duration", str(duration)])
 
-    cmd.extend(["--output-dir", output_dir])
+    cmd.extend(["--out-dir", output_dir])
     
     print(f"実行中: {' '.join(cmd)}")
     print(f"{len(timestamps)}個のクリップを作成します...")
