@@ -35,6 +35,11 @@ def callback() -> None:
         raise typer.Exit(1)
 
 
+def _exit_with_error(exc: Exception) -> None:
+    typer.echo(f"Error ({exc.__class__.__name__}): {exc}", err=True)
+    raise typer.Exit(1)
+
+
 @app.command("cut-fixed")
 def cut_fixed(
     input_file: Annotated[Path, typer.Argument(help="Input video file", exists=True, dir_okay=False)],
@@ -69,8 +74,7 @@ def cut_fixed(
             copy_streams=copy_streams,
         )
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully created clips:")
     for output_file in output_files:
@@ -103,8 +107,7 @@ def cut(
             output_dir=output_dir,
         )
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully created clip:")
     typer.echo(f"  {output_path}")
@@ -131,8 +134,7 @@ def concat(
     try:
         output_path = concat_videos(input_files, output_file=output_file, output_dir=output_dir)
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully created concatenated video:")
     typer.echo(f"  {output_path}")
@@ -165,8 +167,7 @@ def extract_audio_cmd(
             audio_format=audio_format,
         )
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully extracted audio:")
     typer.echo(f"  {output_path}")
@@ -194,8 +195,7 @@ def normalize_audio_cmd(
             output_dir=output_dir,
         )
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully normalized audio:")
     typer.echo(f"  {output_path}")
@@ -223,8 +223,7 @@ def transcode(
             output_dir=output_dir,
         )
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully transcoded video:")
     typer.echo(f"  {output_path}")
@@ -259,8 +258,7 @@ def thumbnail(
             image_format=image_format,
         )
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully created thumbnail:")
     typer.echo(f"  {output_path}")
@@ -274,8 +272,7 @@ def probe(
     try:
         metadata = probe_video(input_file)
     except Exception as exc:  # noqa: BLE001 - CLI output
-        typer.echo(f"Error: {exc}", err=True)
-        raise typer.Exit(1)
+        _exit_with_error(exc)
 
     typer.echo("\n✓ Video metadata:")
     typer.echo(f"  Duration: {metadata['duration']:.2f} seconds")

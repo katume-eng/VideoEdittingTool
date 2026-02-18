@@ -33,7 +33,7 @@ def concat_videos(
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
     list_path = TEMP_DIR / "concat_list.txt"
     list_contents = "\n".join(
-        f"file '{file.resolve().as_posix()}'" for file in input_files
+        f"file '{_escape_concat_path(file.resolve())}'" for file in input_files
     )
     list_path.write_text(list_contents, encoding="utf-8")
 
@@ -55,3 +55,7 @@ def concat_videos(
         if list_path.exists():
             list_path.unlink()
     return output_file
+
+
+def _escape_concat_path(path: Path) -> str:
+    return str(path).replace("'", "\\'")

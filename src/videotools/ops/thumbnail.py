@@ -20,16 +20,22 @@ def extract_thumbnail(
     if not input_file.exists():
         raise FileNotFoundError(f"Input file not found: {input_file}")
 
+    image_format = image_format.lower().lstrip(".")
+    if image_format not in {"png", "jpg", "jpeg"}:
+        raise ValueError("Thumbnail format must be png or jpg/jpeg.")
+
     ensure_directories()
     if output_file is None:
         if output_dir is None:
             output_dir = PROCESSED_DIR
         output_dir.mkdir(parents=True, exist_ok=True)
-        output_file = output_dir / f"{input_file.stem}_thumb.{image_format.lower()}"
+        output_file = output_dir / f"{input_file.stem}_thumb.{image_format}"
 
     suffix = output_file.suffix.lower()
     if suffix not in {".png", ".jpg", ".jpeg"}:
         raise ValueError("Thumbnail output must be .png or .jpg/.jpeg.")
+    if suffix.lstrip(".") != image_format:
+        raise ValueError("Thumbnail format must match output file extension.")
 
     timestamp_seconds = parse_timecode(timestamp)
     args = [
