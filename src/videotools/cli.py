@@ -49,7 +49,7 @@ def cut_fixed(
     ],
     duration: Annotated[
         float,
-        typer.Option(60.0, "--duration", "-d", help="Duration of each clip in seconds"),
+        typer.Option("--duration", "-d", help="Duration of each clip in seconds"),
     ] = 60.0,
     output_dir: Annotated[
         Optional[Path],
