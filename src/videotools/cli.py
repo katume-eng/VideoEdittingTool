@@ -10,8 +10,8 @@ from videotools.ops import (
     concat,
     cut_duration,
     cut_fixed,
-    extract_audio,
-    normalize_audio,
+    extract_audio as extract_audio_ops,
+    normalize_audio as normalize_audio_ops,
     probe,
     thumbnail,
     transcode,
@@ -113,7 +113,7 @@ def extract_audio_command(
     ),
 ) -> None:
     output_path = out or _default_output(input_path, ".wav", paths.PROCESSED_DIR)
-    output = extract_audio.extract_audio(input_path, output_path)
+    output = extract_audio_ops.extract_audio(input_path, output_path)
     typer.echo(f"Created {output}")
 
 
@@ -129,7 +129,7 @@ def normalize_audio_command(
     output_path = out or _default_output(
         input_path, "_normalized" + input_path.suffix, paths.PROCESSED_DIR
     )
-    output = normalize_audio.normalize_audio(input_path, output_path)
+    output = normalize_audio_ops.normalize_audio(input_path, output_path)
     typer.echo(f"Created {output}")
 
 
