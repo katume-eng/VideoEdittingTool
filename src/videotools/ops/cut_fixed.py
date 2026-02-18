@@ -46,7 +46,6 @@ def cut_fixed_clips(
         start_seconds = parse_timecode(timestamp)
         
         # Generate output filename
-        input_stem = input_file.stem
         input_ext = input_file.suffix
         output_filename = f"{output_prefix}_{i:03d}_{format_timecode(start_seconds).replace(':', '-')}{input_ext}"
         output_file = output_dir / output_filename
