@@ -53,11 +53,11 @@ def cut_fixed(
     ] = 60.0,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory for clips"),
+        typer.Option("--out-dir", help="Output directory for clips"),
     ] = None,
     copy_streams: Annotated[
         bool,
-        typer.Option(False, "--copy", help="Use stream copy mode instead of re-encoding"),
+        typer.Option("--copy", help="Use stream copy mode instead of re-encoding"),
     ] = False,
 ) -> None:
     """Cut fixed-duration clips from specified timestamps."""
