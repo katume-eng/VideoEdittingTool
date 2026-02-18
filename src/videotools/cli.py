@@ -88,14 +88,12 @@ def cut(
     duration: Annotated[str, typer.Option(..., "--duration", help="Duration (e.g., 30 or 1:00)")],
     output_file: Annotated[
         Optional[Path],
-        typer.Option(None, "--out", "-o", help="Output file"),
-    ]
-    = None,
+        typer.Option("--out", "-o", help="Output file"),
+    ] = None,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory"),
-    ]
-    = None,
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
 ) -> None:
     """Cut a clip using start time and duration."""
     try:
@@ -121,14 +119,12 @@ def concat(
     ],
     output_file: Annotated[
         Optional[Path],
-        typer.Option(None, "--out", "-o", help="Output file"),
-    ]
-    = None,
+        typer.Option("--out", "-o", help="Output file"),
+    ] = None,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory"),
-    ]
-    = None,
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
 ) -> None:
     """Concatenate multiple videos into one output file."""
     try:
@@ -145,17 +141,15 @@ def extract_audio_cmd(
     input_file: Annotated[Path, typer.Argument(help="Input video file", exists=True, dir_okay=False)],
     output_file: Annotated[
         Optional[Path],
-        typer.Option(None, "--out", "-o", help="Output audio file"),
-    ]
-    = None,
+        typer.Option("--out", "-o", help="Output audio file"),
+    ] = None,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory"),
-    ]
-    = None,
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
     audio_format: Annotated[
         str,
-        typer.Option("wav", "--format", help="Output format: wav or mp3"),
+        typer.Option("--format", help="Output format: wav or mp3"),
     ] = "wav",
 ) -> None:
     """Extract audio track from a video file."""
@@ -178,14 +172,12 @@ def normalize_audio_cmd(
     input_file: Annotated[Path, typer.Argument(help="Input audio/video file", exists=True, dir_okay=False)],
     output_file: Annotated[
         Optional[Path],
-        typer.Option(None, "--out", "-o", help="Output file"),
-    ]
-    = None,
+        typer.Option("--out", "-o", help="Output file"),
+    ] = None,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory"),
-    ]
-    = None,
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
 ) -> None:
     """Normalize audio loudness using ffmpeg loudnorm."""
     try:
@@ -206,14 +198,12 @@ def transcode(
     input_file: Annotated[Path, typer.Argument(help="Input video file", exists=True, dir_okay=False)],
     output_file: Annotated[
         Optional[Path],
-        typer.Option(None, "--out", "-o", help="Output file"),
-    ]
-    = None,
+        typer.Option("--out", "-o", help="Output file"),
+    ] = None,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory"),
-    ]
-    = None,
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
 ) -> None:
     """Transcode a video to H.264/AAC MP4."""
     try:
@@ -235,17 +225,15 @@ def thumbnail(
     timestamp: Annotated[str, typer.Option(..., "--at", help="Timestamp for thumbnail (e.g., 0:05)")],
     output_file: Annotated[
         Optional[Path],
-        typer.Option(None, "--out", "-o", help="Output image file"),
-    ]
-    = None,
+        typer.Option("--out", "-o", help="Output image file"),
+    ] = None,
     output_dir: Annotated[
         Optional[Path],
-        typer.Option(None, "--out-dir", help="Output directory"),
-    ]
-    = None,
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
     image_format: Annotated[
         str,
-        typer.Option("png", "--format", help="Image format: png or jpg"),
+        typer.Option("--format", help="Image format: png or jpg"),
     ] = "png",
 ) -> None:
     """Extract a thumbnail image from a video."""
