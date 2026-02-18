@@ -87,3 +87,8 @@ def validate_timecode(timecode: str) -> bool:
         return True
     except ValueError:
         return False
+
+
+def sanitize_timecode_label(timecode: str) -> str:
+    """Sanitize a timecode string for use in filenames."""
+    return timecode.strip().replace(":", "-").replace(".", "_")

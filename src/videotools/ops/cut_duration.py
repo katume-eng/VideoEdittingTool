@@ -6,7 +6,7 @@ from pathlib import Path
 
 from videotools.ffmpeg import run_ffmpeg
 from videotools.paths import PROCESSED_DIR, ensure_directories
-from videotools.timecode import format_timecode, parse_timecode
+from videotools.timecode import format_timecode, parse_timecode, sanitize_timecode_label
 
 
 def cut_by_duration(
@@ -31,8 +31,8 @@ def cut_by_duration(
 
         input_stem = input_file.stem
         input_ext = input_file.suffix
-        start_formatted = format_timecode(start_seconds).replace(":", "-").replace(".", "_")
-        duration_formatted = format_timecode(duration_seconds).replace(":", "-").replace(".", "_")
+        start_formatted = sanitize_timecode_label(format_timecode(start_seconds))
+        duration_formatted = sanitize_timecode_label(format_timecode(duration_seconds))
         output_filename = f"{input_stem}_cut_{start_formatted}_dur_{duration_formatted}{input_ext}"
         output_file = output_dir / output_filename
 

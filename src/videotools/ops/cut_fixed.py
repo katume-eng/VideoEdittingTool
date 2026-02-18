@@ -7,7 +7,7 @@ from typing import List
 
 from videotools.ffmpeg import run_ffmpeg
 from videotools.paths import PROCESSED_DIR, ensure_directories
-from videotools.timecode import parse_timecode
+from videotools.timecode import parse_timecode, sanitize_timecode_label
 
 
 def cut_fixed_clips(
@@ -29,7 +29,7 @@ def cut_fixed_clips(
     output_files: List[Path] = []
     for timestamp in timestamps:
         start_seconds = parse_timecode(timestamp)
-        timestamp_label = _sanitize_timestamp(timestamp)
+        timestamp_label = sanitize_timecode_label(timestamp)
         output_file = output_dir / f"{input_file.stem}_clip_{timestamp_label}{input_file.suffix}"
 
         args = ["-i", str(input_file), "-ss", str(start_seconds), "-t", str(duration)]
@@ -40,7 +40,3 @@ def cut_fixed_clips(
         output_files.append(output_file)
 
     return output_files
-
-
-def _sanitize_timestamp(timestamp: str) -> str:
-    return timestamp.strip().replace(":", "-").replace(".", "_")
