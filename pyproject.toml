@@ -7,7 +7,7 @@ name = "video-tools"
 version = "0.1.0"
 description = "A Python CLI toolkit for small video editing utilities using ffmpeg"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 dependencies = [
     "typer>=0.9.0",
 ]

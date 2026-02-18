@@ -1,63 +1,42 @@
 """Cut fixed-duration clips from specified timestamps."""
 
+from __future__ import annotations
+
 from pathlib import Path
 from typing import List
 
-from videotools.timecode import parse_timecode, format_timecode
-from videotools.ffmpeg import cut_video
+from videotools.ffmpeg import run_ffmpeg
+from videotools.paths import PROCESSED_DIR, ensure_directories
+from videotools.timecode import parse_timecode, sanitize_timecode_label
 
 
 def cut_fixed_clips(
     input_file: Path,
     timestamps: List[str],
-    duration: int = 60,
-    output_dir: Path = None,
-    output_prefix: str = "clip"
+    duration: float = 60.0,
+    output_dir: Path | None = None,
+    copy_streams: bool = False,
 ) -> List[Path]:
-    """
-    Cut fixed-duration clips from specified timestamps.
-    
-    Args:
-        input_file: Path to input video file
-        timestamps: List of start timestamps (e.g., ["0:00", "1:12", "3:25"])
-        duration: Duration of each clip in seconds (default: 60)
-        output_dir: Directory for output files (default: same as input file)
-        output_prefix: Prefix for output filenames (default: "clip")
-        
-    Returns:
-        List of paths to created clip files
-        
-    Raises:
-        ValueError: If timestamps are invalid
-        FFmpegError: If ffmpeg command fails
-    """
+    """Cut fixed-duration clips from specified timestamps."""
     if not input_file.exists():
         raise FileNotFoundError(f"Input file not found: {input_file}")
-    
+
+    ensure_directories()
     if output_dir is None:
-        output_dir = input_file.parent
-    else:
-        output_dir.mkdir(parents=True, exist_ok=True)
-    
-    output_files = []
-    
-    for i, timestamp in enumerate(timestamps, start=1):
-        # Parse the timestamp
+        output_dir = PROCESSED_DIR
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    output_files: List[Path] = []
+    for timestamp in timestamps:
         start_seconds = parse_timecode(timestamp)
-        
-        # Generate output filename
-        input_ext = input_file.suffix
-        output_filename = f"{output_prefix}_{i:03d}_{format_timecode(start_seconds).replace(':', '-')}{input_ext}"
-        output_file = output_dir / output_filename
-        
-        # Cut the video
-        cut_video(
-            input_file=input_file,
-            output_file=output_file,
-            start_time=start_seconds,
-            duration=duration
-        )
-        
+        timestamp_label = sanitize_timecode_label(timestamp)
+        output_file = output_dir / f"{input_file.stem}_clip_{timestamp_label}{input_file.suffix}"
+
+        args = ["-i", str(input_file), "-ss", str(start_seconds), "-t", str(duration)]
+        if copy_streams:
+            args += ["-c", "copy"]
+        args += ["-y", str(output_file)]
+        run_ffmpeg(args)
         output_files.append(output_file)
-    
+
     return output_files
