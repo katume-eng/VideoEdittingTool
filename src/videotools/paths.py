@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-BASE_DATA_DIR = Path("data")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+BASE_DATA_DIR = ROOT_DIR / "data"
 VIDEO_DIR = BASE_DATA_DIR / "video"
 RAW_DIR = VIDEO_DIR / "raw"
 PROCESSED_DIR = VIDEO_DIR / "processed"

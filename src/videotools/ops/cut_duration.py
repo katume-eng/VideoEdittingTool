@@ -1,13 +1,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
-
 from videotools.ffmpeg import run_ffmpeg
 from videotools.paths import ensure_dir
-from videotools.timecode import parse_timecode
-
-TimecodeValue = Union[str, float, int]
+from videotools.timecode import TimecodeValue, parse_timecode
 
 
 def cut_clip(

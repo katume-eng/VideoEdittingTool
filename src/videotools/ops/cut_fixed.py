@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Iterable
 
 from videotools.ffmpeg import run_ffmpeg
 from videotools.paths import ensure_dir
-from videotools.timecode import parse_timecode
-
-TimecodeValue = Union[str, float, int]
+from videotools.timecode import TimecodeValue, parse_timecode
 
 
 def _label_for_timestamp(raw_value: str, seconds: float) -> str:
