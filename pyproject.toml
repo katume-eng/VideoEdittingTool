@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video-tools"
+version = "0.1.0"
+description = "A Python CLI toolkit for small video editing utilities using ffmpeg"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "typer>=0.9.0",
+]
+
+[project.scripts]
+video-tools = "videotools.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
