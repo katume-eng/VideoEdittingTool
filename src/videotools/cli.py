@@ -8,12 +8,7 @@ from typing import Annotated, List, Optional
 import typer
 
 from videotools.ffmpeg import FFmpegError, ensure_ffmpeg_exists
-from videotools.ops.audio_to_video import (
-    audio_to_video,
-    get_optional_preset_path,
-    get_optional_preset_string,
-    load_audio_to_video_preset,
-)
+from videotools.ops.audio_to_video import audio_to_video
 from videotools.ops.concat import concat_videos
 from videotools.ops.cut_duration import cut_by_duration
 from videotools.ops.cut_fixed import cut_fixed_clips
@@ -22,6 +17,11 @@ from videotools.ops.normalize_audio import normalize_audio
 from videotools.ops.probe import probe_video
 from videotools.ops.thumbnail import extract_thumbnail
 from videotools.ops.transcode import transcode_video
+from videotools.presets import (
+    get_optional_preset_path,
+    get_optional_preset_string,
+    load_audio_to_video_preset,
+)
 
 app = typer.Typer(
     name="video-tools",
@@ -213,6 +213,10 @@ def audio_to_video_cmd(
         Optional[Path],
         typer.Option("--out", "-o", help="Output MP4 file"),
     ] = None,
+    output_dir: Annotated[
+        Optional[Path],
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
     preset: Annotated[
         Optional[Path],
         typer.Option("--preset", "-p", help="Preset JSON/YAML file"),
@@ -264,6 +268,7 @@ def audio_to_video_cmd(
             audio_file=audio_path,
             image_file=image_path,
             output_file=output_file or preset_output,
+            output_dir=output_dir,
             video_codec=selected_video_codec,
             audio_codec=selected_audio_codec,
             audio_bitrate=selected_audio_bitrate,

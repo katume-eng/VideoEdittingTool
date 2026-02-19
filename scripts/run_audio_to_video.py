@@ -6,8 +6,8 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from videotools.ops.audio_to_video import (
-    audio_to_video,
+from videotools.ops.audio_to_video import audio_to_video
+from videotools.presets import (
     get_optional_preset_string,
     get_required_preset_path,
     load_audio_to_video_preset,
