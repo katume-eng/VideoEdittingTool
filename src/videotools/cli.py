@@ -3,15 +3,16 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Any, List, Optional
+from typing import Annotated, List, Optional
 
 import typer
 
 from videotools.ffmpeg import FFmpegError, ensure_ffmpeg_exists
 from videotools.ops.audio_to_video import (
     audio_to_video,
+    get_optional_preset_path,
+    get_optional_preset_string,
     load_audio_to_video_preset,
-    resolve_preset_path,
 )
 from videotools.ops.concat import concat_videos
 from videotools.ops.cut_duration import cut_by_duration
@@ -43,22 +44,6 @@ def callback() -> None:
 def _exit_with_error(exc: Exception) -> None:
     typer.echo(f"Error ({exc.__class__.__name__}): {exc}", err=True)
     raise typer.Exit(1)
-
-
-def _get_preset_string_value(preset: dict[str, Any], key: str) -> Optional[str]:
-    value = preset.get(key)
-    if value is None:
-        return None
-    if not isinstance(value, str):
-        raise ValueError(f"Preset field '{key}' must be a string.")
-    return value
-
-
-def _get_preset_path_value(preset: dict[str, Any], key: str, preset_path: Path) -> Optional[Path]:
-    value = _get_preset_string_value(preset, key)
-    if value is None:
-        return None
-    return resolve_preset_path(preset_path, value)
 
 
 @app.command("cut-fixed")
@@ -252,9 +237,9 @@ def audio_to_video_cmd(
     """Create a video by combining a still image with audio."""
     try:
         preset_data = load_audio_to_video_preset(preset) if preset else {}
-        preset_audio = _get_preset_path_value(preset_data, "audio_path", preset) if preset else None
-        preset_image = _get_preset_path_value(preset_data, "image_path", preset) if preset else None
-        preset_output = _get_preset_path_value(preset_data, "output_path", preset) if preset else None
+        preset_audio = get_optional_preset_path(preset_data, "audio_path", preset) if preset else None
+        preset_image = get_optional_preset_path(preset_data, "image_path", preset) if preset else None
+        preset_output = get_optional_preset_path(preset_data, "output_path", preset) if preset else None
 
         audio_path = audio_file or preset_audio
         image_path = image_file or preset_image
@@ -262,16 +247,16 @@ def audio_to_video_cmd(
             raise ValueError("Audio and image inputs are required (via args or preset).")
 
         selected_video_codec = (
-            video_codec or _get_preset_string_value(preset_data, "video_codec") or "libx264"
+            video_codec or get_optional_preset_string(preset_data, "video_codec") or "libx264"
         )
         selected_audio_codec = (
-            audio_codec or _get_preset_string_value(preset_data, "audio_codec") or "aac"
+            audio_codec or get_optional_preset_string(preset_data, "audio_codec") or "aac"
         )
         selected_audio_bitrate = (
-            audio_bitrate or _get_preset_string_value(preset_data, "audio_bitrate") or "192k"
+            audio_bitrate or get_optional_preset_string(preset_data, "audio_bitrate") or "192k"
         )
         selected_pixel_format = (
-            pixel_format or _get_preset_string_value(preset_data, "pixel_format") or "yuv420p"
+            pixel_format or get_optional_preset_string(preset_data, "pixel_format") or "yuv420p"
         )
 
         typer.echo("Combining audio and image into video...")

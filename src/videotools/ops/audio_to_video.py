@@ -23,6 +23,32 @@ def resolve_preset_path(preset_path: Path, value: str) -> Path:
     return path
 
 
+def get_optional_preset_string(preset: dict[str, Any], key: str) -> str | None:
+    """Return an optional string value from preset data."""
+    value = preset.get(key)
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError(f"Preset field '{key}' must be a string.")
+    return value
+
+
+def get_optional_preset_path(preset: dict[str, Any], key: str, preset_path: Path) -> Path | None:
+    """Return an optional preset path value, resolving relative paths."""
+    value = get_optional_preset_string(preset, key)
+    if value is None:
+        return None
+    return resolve_preset_path(preset_path, value)
+
+
+def get_required_preset_path(preset: dict[str, Any], key: str, preset_path: Path) -> Path:
+    """Return a required preset path value, raising if missing."""
+    value = get_optional_preset_path(preset, key, preset_path)
+    if value is None:
+        raise ValueError(f"Preset field '{key}' is required.")
+    return value
+
+
 def load_audio_to_video_preset(preset_path: Path) -> dict[str, Any]:
     """Load audio-to-video preset data from JSON or YAML."""
     if not preset_path.exists():
