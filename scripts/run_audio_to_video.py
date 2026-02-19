@@ -15,7 +15,7 @@ from videotools.ops.audio_to_video import (
 )
 
 
-def _preset_required_path(preset: dict[str, Any], key: str, preset_path: Path) -> Path:
+def _get_required_preset_path(preset: dict[str, Any], key: str, preset_path: Path) -> Path:
     value = preset.get(key)
     if not isinstance(value, str) or not value:
         raise ValueError(f"Preset field '{key}' is required.")
@@ -30,8 +30,8 @@ def main() -> None:
     preset_path = Path(args.preset)
     try:
         preset_data = load_audio_to_video_preset(preset_path)
-        audio_path = _preset_required_path(preset_data, "audio_path", preset_path)
-        image_path = _preset_required_path(preset_data, "image_path", preset_path)
+        audio_path = _get_required_preset_path(preset_data, "audio_path", preset_path)
+        image_path = _get_required_preset_path(preset_data, "image_path", preset_path)
         output_value = preset_data.get("output_path")
         output_path = (
             resolve_preset_path(preset_path, output_value)
