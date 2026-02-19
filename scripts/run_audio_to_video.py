@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from videotools.ops.audio_to_video import (
     audio_to_video,
+    get_optional_preset_string,
     get_required_preset_path,
     load_audio_to_video_preset,
     resolve_preset_path,
@@ -35,10 +36,10 @@ def main() -> None:
             audio_file=audio_path,
             image_file=image_path,
             output_file=output_path,
-            video_codec=str(preset_data.get("video_codec", "libx264")),
-            audio_codec=str(preset_data.get("audio_codec", "aac")),
-            audio_bitrate=str(preset_data.get("audio_bitrate", "192k")),
-            pixel_format=str(preset_data.get("pixel_format", "yuv420p")),
+            video_codec=get_optional_preset_string(preset_data, "video_codec") or "libx264",
+            audio_codec=get_optional_preset_string(preset_data, "audio_codec") or "aac",
+            audio_bitrate=get_optional_preset_string(preset_data, "audio_bitrate") or "192k",
+            pixel_format=get_optional_preset_string(preset_data, "pixel_format") or "yuv420p",
         )
     except Exception as exc:  # noqa: BLE001 - script output
         print(f"Error ({exc.__class__.__name__}): {exc}", file=sys.stderr)
