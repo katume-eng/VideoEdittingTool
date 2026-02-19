@@ -6,15 +6,20 @@ import sys
 
 def main():
     # 設定
-    input_file = "/mnt/c/bussiness/song/Tori_1/月に沈む都/input.mp4"
-    output_dir = "/mnt/c/bussiness/song/Tori_1/月に沈む都/clips"
+    base_dir = "/mnt/c/bussiness/song/Tori_1/月影、風の行方"
+    input_file = f"{base_dir}/input.mp4"
+    output_dir = f"{base_dir}/clips"
     duration = 60  # 秒
     
     # 切り抜きたい開始時間のリスト
     timestamps = [
         "0:00",
-        "0:12",
-        "1:01",
+        "1:18",
+        "1:25",
+        "1:40",
+        "2:45",
+        "2:57",
+        "3:49",
         # ここに追加したい時間を書く
     ]
     
