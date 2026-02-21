@@ -55,6 +55,24 @@ video-tools extract-audio input.mp4 --format mp3 --out audio.mp3
 video-tools normalize-audio audio.wav --out normalized.wav
 ```
 
+### Create a video from audio + image
+
+```bash
+video-tools audio-to-video --audio input.mp3 --image cover.jpg --out output.mp4
+```
+
+Using a preset file:
+
+```bash
+video-tools audio-to-video --preset presets/audio_to_video_preset.json
+```
+
+Or run the helper script:
+
+```bash
+python scripts/run_audio_to_video.py --preset presets/audio_to_video_preset.json
+```
+
 ### Transcode to MP4 (H.264/AAC)
 
 ```bash

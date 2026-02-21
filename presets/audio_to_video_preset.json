@@ -1,0 +1,9 @@
+{
+  "audio_path": "data/audio/input.mp3",
+  "image_path": "data/images/cover.jpg",
+  "output_path": "data/output/result.mp4",
+  "video_codec": "libx264",
+  "audio_codec": "aac",
+  "audio_bitrate": "192k",
+  "pixel_format": "yuv420p"
+}

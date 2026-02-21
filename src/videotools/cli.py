@@ -8,6 +8,7 @@ from typing import Annotated, List, Optional
 import typer
 
 from videotools.ffmpeg import FFmpegError, ensure_ffmpeg_exists
+from videotools.ops.audio_to_video import audio_to_video
 from videotools.ops.concat import concat_videos
 from videotools.ops.cut_duration import cut_by_duration
 from videotools.ops.cut_fixed import cut_fixed_clips
@@ -16,6 +17,11 @@ from videotools.ops.normalize_audio import normalize_audio
 from videotools.ops.probe import probe_video
 from videotools.ops.thumbnail import extract_thumbnail
 from videotools.ops.transcode import transcode_video
+from videotools.presets import (
+    get_optional_preset_path,
+    get_optional_preset_string,
+    load_audio_to_video_preset,
+)
 
 app = typer.Typer(
     name="video-tools",
@@ -190,6 +196,88 @@ def normalize_audio_cmd(
         _exit_with_error(exc)
 
     typer.echo("\n✓ Successfully normalized audio:")
+    typer.echo(f"  {output_path}")
+
+
+@app.command("audio-to-video")
+def audio_to_video_cmd(
+    audio_file: Annotated[
+        Optional[Path],
+        typer.Option("--audio", help="Input audio file", exists=True, dir_okay=False),
+    ] = None,
+    image_file: Annotated[
+        Optional[Path],
+        typer.Option("--image", help="Input image file", exists=True, dir_okay=False),
+    ] = None,
+    output_file: Annotated[
+        Optional[Path],
+        typer.Option("--out", "-o", help="Output MP4 file"),
+    ] = None,
+    output_dir: Annotated[
+        Optional[Path],
+        typer.Option("--out-dir", help="Output directory"),
+    ] = None,
+    preset: Annotated[
+        Optional[Path],
+        typer.Option("--preset", "-p", help="Preset JSON/YAML file"),
+    ] = None,
+    video_codec: Annotated[
+        Optional[str],
+        typer.Option("--video-codec", help="Video codec (default: libx264)"),
+    ] = None,
+    audio_codec: Annotated[
+        Optional[str],
+        typer.Option("--audio-codec", help="Audio codec (default: aac)"),
+    ] = None,
+    audio_bitrate: Annotated[
+        Optional[str],
+        typer.Option("--audio-bitrate", help="Audio bitrate (default: 192k)"),
+    ] = None,
+    pixel_format: Annotated[
+        Optional[str],
+        typer.Option("--pixel-format", help="Pixel format (default: yuv420p)"),
+    ] = None,
+) -> None:
+    """Create a video by combining a still image with audio."""
+    try:
+        preset_data = load_audio_to_video_preset(preset) if preset else {}
+        preset_audio = get_optional_preset_path(preset_data, "audio_path", preset) if preset else None
+        preset_image = get_optional_preset_path(preset_data, "image_path", preset) if preset else None
+        preset_output = get_optional_preset_path(preset_data, "output_path", preset) if preset else None
+
+        audio_path = audio_file or preset_audio
+        image_path = image_file or preset_image
+        if audio_path is None or image_path is None:
+            raise ValueError("Audio and image inputs are required (via args or preset).")
+
+        selected_video_codec = (
+            video_codec or get_optional_preset_string(preset_data, "video_codec") or "libx264"
+        )
+        selected_audio_codec = (
+            audio_codec or get_optional_preset_string(preset_data, "audio_codec") or "aac"
+        )
+        selected_audio_bitrate = (
+            audio_bitrate or get_optional_preset_string(preset_data, "audio_bitrate") or "192k"
+        )
+        selected_pixel_format = (
+            pixel_format or get_optional_preset_string(preset_data, "pixel_format") or "yuv420p"
+        )
+
+        typer.echo("Combining audio and image into video...")
+        output_path = audio_to_video(
+            audio_file=audio_path,
+            image_file=image_path,
+            output_file=output_file or preset_output,
+            output_dir=output_dir,
+            video_codec=selected_video_codec,
+            audio_codec=selected_audio_codec,
+            audio_bitrate=selected_audio_bitrate,
+            pixel_format=selected_pixel_format,
+        )
+    except Exception as exc:  # noqa: BLE001 - CLI output
+        _exit_with_error(exc)
+
+    typer.echo("\n✓ Successfully created video:")
     typer.echo(f"  {output_path}")
 
 
